@@ -1,4 +1,6 @@
-# Static HTML site: deploy main root via GitHub Pages (Actions)
+# Static HTML site: deploy via GitHub Pages (Actions)
+# Prerequisite: Settings → Pages → Source = GitHub Actions
+# (or Deploy from a branch: main / root — then this workflow is optional)
 name: Deploy GitHub Pages
 on:
   push:
@@ -19,11 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Stage site files only
+        run: |
+          mkdir -p _site
+          cp index.html .nojekyll _site/
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
